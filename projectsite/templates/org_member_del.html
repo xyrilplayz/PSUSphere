@@ -6,13 +6,13 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Delete Organization</div>
+                        <div class="card-title">Delete Organization Member</div>
                         <div class="card-category">Page Subtitle</div>
                     </div>
                     <div class="col-md-6">
                     <div class="card-body">
                         <form class="" action="" method="post" novalidate>
-                            <p>Are you sure you want to delete "{{ object }}"?</p>
+                            <p>Are you sure you want to delete <strong>{{ object.organization }} Member: </strong>{{ object.student }}?</p>
                             {% csrf_token %} {% include 'includes/form.html' %}
                             <div class="form-group">
                                 <div class="col-md-12 col-sm-3">
