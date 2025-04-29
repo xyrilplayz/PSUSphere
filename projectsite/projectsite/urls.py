@@ -21,7 +21,8 @@ OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDe
 OrgMemberListView, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView,
 StudentListView, StudentCreateView, StudentUpdateView, StudentDeleteView,
 CollegeListView, CollegeCreateView, CollegeUpdateView, CollegeDeleteView,
-ProgramListView, ProgramCreateView, ProgramUpdateView, ProgramDeleteView)
+ProgramListView, ProgramCreateView, ProgramUpdateView, ProgramDeleteView, 
+PieCountByProgram, OrgMembersCountByOrg, TopCollegesByStudentCount, CommonLastName, OrgCountByColleges)
 from studentorg import views
 from django.contrib.auth import views as auth_views
 
@@ -55,5 +56,10 @@ urlpatterns = [
 
     re_path(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     re_path(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
-   # re_path(r'^login/$', auth_views.LogoutView.as_view(), name='logout'),
+
+    path('pieCountByProgramChart/', views.PieCountByProgram, name='chart'),
+    path('orgMembersCountByOrg/', views.OrgMembersCountByOrg, name='chart'),
+    path('topCollegesByStudentCount/', views.TopCollegesByStudentCount, name='chart'),
+    path('commonLastNames/', views.CommonLastName, name='chart'),
+    path('orgCountByCollege/', views.OrgCountByColleges, name='chart'),
 ]

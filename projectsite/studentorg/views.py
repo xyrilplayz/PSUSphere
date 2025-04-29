@@ -11,6 +11,11 @@ from django.db.models.query import QuerySet
 from django.db.models import Q
 import calendar
 import re
+
+from django.db import connection
+from django.http import JsonResponse
+from django.db.models import Count
+
 @method_decorator(login_required, name='dispatch')
 class HomePageView(ListView):
     model = Organization
@@ -220,3 +225,34 @@ class ProgramDeleteView(DeleteView):
     model = Program
     template_name = 'program_del.html'
     success_url = reverse_lazy('program-list')
+
+def PieCountByProgram(request):
+    programs = Program.objects.annotate(student_count=Count('student')).values('prog_name', 'student_count')
+    data = {program['prog_name']: program['student_count'] for program in programs}
+    return JsonResponse(data)
+
+def OrgMembersCountByOrg(request):
+    orgs = Organization.objects.annotate(member_count=Count('orgmember')).values('name', 'member_count')
+    data = {org['name']: org['member_count'] for org in orgs}
+    return JsonResponse(data)
+
+def TopCollegesByStudentCount(request):
+    colleges = College.objects.annotate(student_count=Count('program__student')).order_by('-student_count')[:5]
+    data = {college.college_name: college.student_count for college in colleges}
+    return JsonResponse(data)
+
+def CommonLastName(request):
+    common_names = (
+        Student.objects.values('lastname')
+        .annotate(name_count=Count('lastname'))
+        .filter(name_count__gte=2)
+        .order_by('-name_count')
+    )
+    
+    data = {item['lastname']: item['name_count'] for item in common_names}
+    return JsonResponse(data)
+
+def OrgCountByColleges(request):
+    colleges = College.objects.annotate(member_count=Count('organization__orgmember')).values('college_name', 'member_count')
+    data = {college['college_name']: college['member_count'] for college in colleges}
+    return JsonResponse(data)
